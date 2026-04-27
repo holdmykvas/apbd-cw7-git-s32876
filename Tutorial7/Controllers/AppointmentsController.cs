@@ -17,9 +17,9 @@ namespace Tutorial7.Controllers
         }
         
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] string? status, [FromQuery] string? patientLastName)
         {
-            var appointments = await _appointmentsService.GetAllAppointmentsAsync();
+            var appointments = await _appointmentsService.GetAllAppointmentsAsync(status, patientLastName);
             return Ok(appointments);
         }
     }
