@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -54,7 +55,28 @@ namespace Tutorial7.Controllers
             {
                 return Conflict(e.Message);
             }
-            
+        }
+
+        [HttpPut("{idAppointment:int}")]
+        public async Task<IActionResult> Update([FromRoute] int idAppointment,
+            [FromBody] UpdateAppointmentRequestDTO request)
+        {
+            try
+            {
+                await _appointmentsService.UpdateAppointmentAsync(idAppointment, request);
+                return Ok($"Appointment {idAppointment} updated");
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            } catch (InvalidOperationException e)
+            {
+                return Conflict(e.Message);
+            }
         }
     }
 }

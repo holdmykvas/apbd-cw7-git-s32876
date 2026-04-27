@@ -11,4 +11,6 @@ public interface IAppointmentsService
     Task<AppointmentDetailsDTO?> GetAppointmentByIdAsync(int idAppointment);
     
     Task<int> CreateAppointmentAsync(CreateAppointmentRequestDTO request);
+    
+    Task UpdateAppointmentAsync(int idAppointment, UpdateAppointmentRequestDTO request);
 }
