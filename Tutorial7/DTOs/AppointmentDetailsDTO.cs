@@ -1,4 +1,6 @@
-﻿namespace Tutorial7.DTOs;
+﻿using System;
+
+namespace Tutorial7.DTOs;
 
 public class AppointmentDetailsDTO
 {

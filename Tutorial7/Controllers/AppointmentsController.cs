@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Tutorial7.DTOs;
@@ -33,6 +35,26 @@ namespace Tutorial7.Controllers
                 return NotFound($"Appointment {idAppointment} not found");
             }
             return Ok(appointment);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreateAppointmentRequestDTO request)
+        {
+            try
+            {
+                var newAppointmentId = await _appointmentsService.CreateAppointmentAsync(request);
+
+                return CreatedAtAction(nameof(GetById), new { idAppointment = newAppointmentId }, null);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (InvalidOperationException e)
+            {
+                return Conflict(e.Message);
+            }
+            
         }
     }
 }
