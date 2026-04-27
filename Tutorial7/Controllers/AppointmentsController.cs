@@ -78,5 +78,23 @@ namespace Tutorial7.Controllers
                 return Conflict(e.Message);
             }
         }
+
+        [HttpDelete("{idAppointment:int}")]
+        public async Task<IActionResult> Delete([FromRoute] int idAppointment)
+        {
+            try
+            {
+                await _appointmentsService.DeleteAppointmentAsync(idAppointment);
+                return NoContent();
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (InvalidOperationException e)
+            {
+                return Conflict(e.Message);
+            }
+        }
     }
 }
