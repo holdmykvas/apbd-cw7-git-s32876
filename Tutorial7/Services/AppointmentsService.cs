@@ -54,4 +54,49 @@ public class AppointmentsService : IAppointmentsService
         
         return appointments;
     }
+
+    public async Task<AppointmentDetailsDTO?> GetAppointmentByIdAsync(int idAppointment)
+    {
+        var query = @"SELECT 
+            a.IdAppointment, a.AppointmentDate,a.Status, a.Reason, a.InternalNotes, a.CreatedAt,
+            p.FirstName + ' ' + p.LastName AS PatientFullName,
+            p.Email AS PatientEmail,
+            p.PhoneNumber AS PatientPhoneNumber,
+            d.FirstName + ' ' + d.LastName AS DoctorFullName,
+            d.LicenseNumber AS DoctorLicenseNumber
+            FROM dbo.Appointments a
+            JOIN dbo.Patients p ON a.IdPatient = p.IdPatient
+            JOIN dbo.Doctors d ON a.IdDoctor = d.IdDoctor
+            WHERE a.IdAppointment = @IdAppointment;";
+
+        await using var connection = new SqlConnection(_connectionString);
+        await connection.OpenAsync();
+
+        await using var command = new SqlCommand(query, connection);
+        command.Parameters.Add(new SqlParameter("@IdAppointment", SqlDbType.Int) { Value = idAppointment });
+        
+        await using var reader = await command.ExecuteReaderAsync();
+        
+        if (!await reader.ReadAsync())
+        {
+            return null; 
+        }
+        
+        return new AppointmentDetailsDTO
+        {
+            IdAppointment = reader.GetInt32(reader.GetOrdinal("IdAppointment")),
+            AppointmentDate = reader.GetDateTime(reader.GetOrdinal("AppointmentDate")),
+            Status = reader.GetString(reader.GetOrdinal("Status")),
+            Reason = reader.GetString(reader.GetOrdinal("Reason")),
+            InternalNotes = reader.IsDBNull(reader.GetOrdinal("InternalNotes")) ? null : reader.GetString(reader.GetOrdinal("InternalNotes")),
+            CreatedAt = reader.GetDateTime(reader.GetOrdinal("CreatedAt")),
+        
+            PatientFullName = reader.GetString(reader.GetOrdinal("PatientFullName")),
+            PatientEmail = reader.GetString(reader.GetOrdinal("PatientEmail")),
+            PatientPhoneNumber = reader.GetString(reader.GetOrdinal("PatientPhoneNumber")),
+        
+            DoctorFullName = reader.GetString(reader.GetOrdinal("DoctorFullName")),
+            DoctorLicenseNumber = reader.GetString(reader.GetOrdinal("DoctorLicenseNumber"))
+        };
+    }
 }
