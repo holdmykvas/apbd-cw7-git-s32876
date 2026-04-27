@@ -49,11 +49,11 @@ namespace Tutorial7.Controllers
             }
             catch (ArgumentException e)
             {
-                return BadRequest(e.Message);
+                return BadRequest(new ErrorResponseDTO { Message = e.Message});
             }
             catch (InvalidOperationException e)
             {
-                return Conflict(e.Message);
+                return Conflict(new ErrorResponseDTO { Message = e.Message});
             }
         }
 
@@ -68,14 +68,14 @@ namespace Tutorial7.Controllers
             }
             catch (KeyNotFoundException e)
             {
-                return NotFound(e.Message);
+                return NotFound(new ErrorResponseDTO { Message = e.Message});
             }
             catch (ArgumentException e)
             {
-                return BadRequest(e.Message);
+                return BadRequest(new ErrorResponseDTO { Message = e.Message});
             } catch (InvalidOperationException e)
             {
-                return Conflict(e.Message);
+                return Conflict(new ErrorResponseDTO { Message = e.Message});
             }
         }
 
@@ -89,11 +89,11 @@ namespace Tutorial7.Controllers
             }
             catch (KeyNotFoundException e)
             {
-                return NotFound(e.Message);
+                return NotFound(new ErrorResponseDTO { Message = e.Message});
             }
             catch (InvalidOperationException e)
             {
-                return Conflict(e.Message);
+                return Conflict(new ErrorResponseDTO { Message = e.Message});
             }
         }
     }
